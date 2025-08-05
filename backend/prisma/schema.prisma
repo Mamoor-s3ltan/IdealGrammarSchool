@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        Int       @id @default(autoincrement())
+  username  String    @unique
+  password  String
+  createdAt DateTime  @default(now())
+  students  Student[]
+  teachers  Teacher[]
+  salaries  Salary[]
+}
+
+model Student {
+  id         Int        @id @default(autoincrement())
+  rollNumber Int        @unique
+  name       String
+  className  String
+  isBlocked  Boolean    @default(false)
+  password   String 
+  createdAt  DateTime   @default(now())
+  adminId    Int
+  admin      Admin      @relation(fields: [adminId], references: [id])
+  feeStatus  FeeStatus?
+}
+
+model Teacher {
+  id           Int               @id @default(autoincrement())
+  teacherId    String            @unique
+  name         String
+  salary       Float             @default(0)
+  password     String
+  createdAt    DateTime          @default(now())
+  adminId      Int
+  admin        Admin             @relation(fields: [adminId], references: [id])
+  assignments  ClassAssignment[]
+  homework     Homework[]
+  salaries     Salary[]
+}
+
+model ClassAssignment {
+  id         Int      @id @default(autoincrement())
+  className  String
+  teacherId  Int
+  teacher    Teacher  @relation(fields: [teacherId], references: [id],onDelete: Cascade)
+}
+
+model Homework {
+  id          Int      @id @default(autoincrement())
+  className   String
+  details     String
+  createdAt   DateTime @default(now())
+  teacherId   Int
+  teacher     Teacher  @relation(fields: [teacherId], references: [id],onDelete: Cascade)
+}
+
+model FeeStatus {
+  id         Int      @id @default(autoincrement())
+  studentId  Int      @unique
+  isPaid     Boolean  @default(false)
+  updatedAt  DateTime @updatedAt
+  student    Student  @relation(fields: [studentId], references: [id])
+}
+
+model Salary {
+  id         Int      @id @default(autoincrement())
+  teacherId  Int
+  adminId    Int
+  month      String   // e.g. "July 2025"
+  amount     Float
+  paid       Boolean  @default(false)
+  paidOn     DateTime?
+  teacher    Teacher  @relation(fields: [teacherId], references: [id],onDelete: Cascade)
+  admin      Admin    @relation(fields: [adminId], references: [id])
+}
+
