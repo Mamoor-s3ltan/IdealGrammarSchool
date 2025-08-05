@@ -67,10 +67,14 @@ npm install
 npm start
 ```
 ```
-🔹 Backend (Node.js + Express)
+🔹 Backend (Node.js + Express + Prisma)
 
 cd backend
 npm install
+//Create a .env file in backend Folder  and add this line DATABASE_URL="mysql://root:@localhost:3306/grammarschool_db" change the port and username accordingly
+npx prisma generate
+npx prisma migrate dev --name init
+//and first run the AdminStatic.js to create the Admin
 npm run dev
 ```
 
