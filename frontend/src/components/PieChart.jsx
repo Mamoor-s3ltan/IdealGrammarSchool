@@ -13,7 +13,9 @@ const PieChart = ({ userCounts }) => {
         label: 'User Distribution',
         data: [userCounts.teachers, userCounts.students, 15],
         backgroundColor: [
-          '#6366F1',  
+          '#6366F1', 
+          '#10B981', 
+          '#F59E0B',  
         ],
         borderColor: [
           '#4F46E5', 
